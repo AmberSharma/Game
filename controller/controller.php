@@ -61,7 +61,7 @@ class MyClass
 		require_once SITE_PATH.'/../model/gettersettermodel.php';
 		$objInitiateUser = new Register ();
 		$b=$objInitiateUser->loggedinCount () ;
-		$b = $b +1;
+		$b = $b;
 		print_r($b);
 		
 	}
@@ -72,7 +72,40 @@ class MyClass
 		$objInitiateUser = new Register ();
 		$b=$objInitiateUser->assignUserSpace () ;
 	}
+
+	public function insertMessage ()
+	{
+		require_once SITE_PATH.'/../model/gettersettermodel.php';
+		$objInitiateUser = new Register ();
+		$objInitiateUser->setMessage($_REQUEST['message']);
+		$b=$objInitiateUser->insertMessage () ;
+		print_r($b);
+	}
+
+	public function getMessage ()
+	{
+		require_once SITE_PATH.'/../model/gettersettermodel.php';
+		$objInitiateUser = new Register ();
+		$b=$objInitiateUser->getnewMessage () ;
+		if(!empty($b))
+		{
+			for($i = 0 ; $i < count($b) ;$i ++)
+			{
+				$arr[] = $b[$i]["user"];
+				$arr[] = $b[$i]["message"];
+			}
+		}
+		echo json_encode($arr);
+	}
 	
+	public function gameSet ()
+	{
+		require_once SITE_PATH.'/../model/gettersettermodel.php';
+		$objInitiateUser = new Register ();
+		$b=$objInitiateUser->updateUser () ;
+		$objInitiateUser->userScoreTable () ;
+		require_once SITE_PATH.'/../View/gameset.php';
+	}
 	public function logout ()
 	{	
 		require_once SITE_PATH.'/../model/gettersettermodel.php';

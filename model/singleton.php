@@ -36,6 +36,7 @@ class DBConnection {
     private $_starttransaction = "";
     private $_commit = "";
     private $_rollback = "";
+    private $_create ="";
 
     private function __construct() {
         
@@ -94,6 +95,21 @@ class DBConnection {
         
         
 		return $this;
+    }
+
+	public function Create($data = "") {
+    	
+    echo $data;
+    	if (!empty($data)) {
+    		
+    		$this->_create = $data;
+    	}
+    	if(!empty($this->_create))
+    	{
+    	$a = mysql_query($this->_create);
+    	//echo $this->_create;
+		return $a;
+    	}
     }
     
     public function Ast($value1 = array())

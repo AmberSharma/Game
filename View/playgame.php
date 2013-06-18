@@ -1,108 +1,46 @@
 <script src="<?php echo SITE_URL;?>/js/jquery.tools.min.js"></script>
 
-<script>
 
-
-
-
-            		 
-  var myTimer;      	
-  var images = ['rolledpaper1.png', 'rolledpaper2.png', 'rolledpaper3.png', 'rolledpaper4.png'];
-$(document).ready(function()
-{
-	
-	
-	$("#output1").hide();
-	function loggedinCount()
-	{
-		
-		$.ajax
-		({
-			type: "POST",
-	        	url: '../controller/controller.php?method=loggedinCount',
-         		success: function(data)
-         		{
-             		
-             		if($.trim(data) != 4)
-             		{
-             			$("#output").show();
-             			$("#output1").hide();		
-						$("#output").html("Number of users Logged In:"+($.trim(data)));
-						$("#output").append("<br/>Waiting for:"+(4-$.trim(data))+" more user to start the Game");
-         			}
-             		else
-             		{
-             			$("#output").hide();
-             			//setInterval(loggedinCount, 0);
-             			clearInterval(myTimer);
-             			$("#output1").show();		
-             		}
-         		}
-		});
-		
-	}
-	loggedinCount();
-	myTimer = setInterval(loggedinCount, 5000);
-	
-});
-function letsplay()
-{
-	$("#output1").hide();
-	
-	$("#output2").html("<table id='user'><tr><td></td><td id='u1'><?php echo ucfirst($_SESSION["user1"]);?></td><td></td></tr><tr><td id='u2'><?php echo ucfirst($_SESSION["user2"]);?></td><td id='slips'><table><tr><td class ='rotateimage0'><img  src='<?php echo SITE_URL."/images/rolledpaper1.png" ?>' height=50 width=50/> </td><td class ='rotateimage1'><img src='<?php echo SITE_URL."/images/rolledpaper2.png" ?>' height=50 width=50/> </td></tr><tr><td class ='rotateimage2'><img src='<?php echo SITE_URL."/images/rolledpaper3.png" ?>' height=50 width=50/> </td><td class ='rotateimage3'><img src='<?php echo SITE_URL."/images/rolledpaper4.png" ?>' height=50 width=50/> </td></tr></table></td><td id='u4'><?php echo ucfirst($_SESSION["user4"]);?></td></tr><tr><td></td><td id='u3'><?php echo ucfirst($_SESSION["user3"]);?></td><td></td></tr></table>");
-
-	$("#slips").append("<input type='button' onclick='shufle()' value='shuffle' />");
-}
-function shufle()
-{
-	
-	var a="";
-	
-	$('#slips').html("");
-	a+="<table>";
-	var randnums = [0,1,2,3];
-	var index = shuffle(randnums);
-	   
-	for(var i=0;i<4;i++)
-	{
-		 if(i % 2 == 0)
-		   {
-			   
-			 a+=  '<tr>';
-		   }
-	    a+='<td class ="rotateimage'+index[i]+'"> ';
-	    a+='<a id="'+index[i]+'" onclick=choose("'+index[i]+'") href="javascript:void(0)">';
-	     a+='<img src="<?php echo SITE_URL."/images/" ?>' + images[index[i]] + '" height=50 width=50/>';
-		a+='</a>';
-	     a+='</td>';
-	     if(i % 2 != 0)
-		   {
-	    	 
-			  a+='</tr>';
-		   }
-	}
-	   a+='</table>';
-	   a+="<input type='button' onclick='shufle()' value='shuffle' />";
-	   $('#slips').html(a);
-}
-
-function shuffle(o){ //v1.0
-    for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-    return o;
-}
-function choose(id)
-{
-	//alert(id);
-	$("#"+id).hide();
-	var a="";
-	a+='<img src="<?php echo SITE_URL."/images/" ?>' + images[id] + '" height=50 width=50/>';
-	$("#u1").append(a);
-	
-}
-
-
-</script>
 <style>
+
+
+
+
+.bubble {
+    background-color: #eee;
+    border: 2px solid #333;
+    border-radius: 5px;
+    color: #333;
+    display: inline-block;
+    font: 16px/24px sans-serif;
+    padding: 12px 24px;
+    position: relative;
+}
+.bubble:after,
+.bubble:before {
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 20px solid #eee;
+    bottom: -20px;
+    content: '';
+    left: 50%;
+    margin-left: -20px;
+    position: absolute;
+}
+
+/* Styling for second triangle (border) */
+
+.bubble:before {
+    border-left: 23px solid transparent;
+    border-right: 23px solid transparent;
+    border-top: 23px solid;
+    border-top-color: inherit; /* Can't be included in the shorthand to work */
+    bottom: -23px;
+    margin-left: -23px;
+}
+
+
+
 #user
 {
 	height:600px;
@@ -129,9 +67,23 @@ function choose(id)
  -moz-transform: rotate(-30deg);
  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 }
+
+.scoreimage
+{
+background:url(../images/viewslip.png);
+background-size:80px 60px;
+background-repeat:no-repeat;
+}
+
+
 </style>
 
+
+
 <a href="../controller/controller.php?method=logout" >Logout</a>
+<div id='score'>
+<img src='http://www.rvcs.com/images/viewslip.png' width=150 height=200 />
+</div>
 
 <div id="output"></div>
 <div id="output1">
@@ -154,8 +106,237 @@ Lets say B guesses it wrong .In this case the thief gets 500 points and assistan
 </div>
 <?php print_r($_SESSION);?>
 
-
-
 <div id="output2"></div>
+
+<script>
+var count =1;
+var myTimer;      	
+var images = ['rolledpaper1.png', 'rolledpaper2.png', 'rolledpaper3.png', 'rolledpaper4.png'];
+var randnums = [0,1,2,3];
+var message3 = "Mera Mantri kaun?";
+var message2 = "Main Sarkaar!";
+var user1 ="";
+var user2="";
+var user3="";
+var user4="";
+$(document).ready(function()
+{
+user1=<?php echo "'".$_SESSION['user1']."'"; ?>;
+user2=<?php echo "'".$_SESSION['user2']."'"; ?>;
+user3=<?php echo "'".$_SESSION['user3']."'"; ?>;
+user4=<?php echo "'".$_SESSION['user4']."'"; ?>;
+
+	$("#output1").hide();
+	$("#commentbox").hide();
+	$("#score").hide();
+	function loggedinCount()
+	{
+		
+		$.ajax
+		({
+			type: "POST",
+	        	url: '../controller/controller.php?method=loggedinCount',
+         		success: function(data)
+         		{
+             		
+             		if($.trim(data) != 4)
+             		{
+             			$("#output").show();
+             			$("#output1").hide();		
+				$("#output").html("Number of users Logged In:"+($.trim(data)));
+				$("#output").append("<br/>Waiting for:"+(4-$.trim(data))+" more user to start the Game");
+         			}
+             		else
+             		{
+             			$("#output").hide();
+             			clearInterval(myTimer);
+             			$("#output1").show();		
+             		}
+         		}
+		});
+		
+	}
+	loggedinCount();
+	myTimer = setInterval(loggedinCount, 5000);
+	
+});
+
+function letsplay()
+{
+	$("#output1").hide();
+	$.ajax
+		({
+			type: "POST",
+	        	url: '../controller/controller.php?method=gameSet',
+         		success: function(data)
+         		{
+             				
+				$("#output2").html($.trim(data));
+				
+				$("#u10").hide();
+				$("#u21").hide();
+				$("#u32").hide();
+				$("#u43").hide();
+				
+				
+         		},
+			complete:function()
+			{	
+$("#slips").append("<input type='button' onclick='shufle()' value='shuffle' />");
+				
+			}
+		});
+	
+}
+function popmessage(id)
+{
+	var mess="";
+	if(id == 3)
+	mess = message3;
+	if(id == 2)
+	mess = message2;
+	if(id == 1)
+	mess = message1;
+	if(id == 0)
+	mess = message0;
+	$.ajax
+		({
+			type: "POST",
+	        	url: '../controller/controller.php?method=insertMessage&message='+mess,
+         		success: function(data)
+         		{
+				if($.trim(data) == "1")
+				{
+             				
+					myTimer = setInterval(getmessage, 5000);
+				}
+         		}
+		});
+	
+}
+
+function getmessage()
+{
+	
+	var k =0;
+	$.ajax
+		({
+			type: "POST",
+	        	url: '../controller/controller.php?method=getMessage',
+         		success: function(data)
+         		{
+				var resp=jQuery.parseJSON($.trim(data));
+				var name = " ";
+				$.each(resp, function(key, val) 
+				{
+					
+
+					if(key % 2 == 0)
+					{
+						name = val;
+					}
+					else
+					{
+						$("#"+name).html("<span class='bubble'>"+ val + "</span>");
+					}
+				});
+				
+         		}
+		});
+	
+}
+function shufle()
+{
+	
+	var a="";
+	
+	$('#slips').html("");
+	a+= "<center>";
+	a+="<table>";
+	
+	var index = shuffle(randnums);
+	   
+	for(var i=0;i<4;i++)
+	{
+		 if(i % 2 == 0)
+		   {
+			   
+			 a+=  '<tr>';
+		   }
+	    a+='<td class ="rotateimage'+index[i]+'"> ';
+	    a+='<a id="'+index[i]+'" onclick=choose("'+index[i]+'") href="javascript:void(0)">';
+		a+=index[i];
+	     a+='<img src="<?php echo SITE_URL."/images/" ?>' + images[index[i]] + '" height=50 width=50/>';
+		a+='</a>';
+	     a+='</td>';
+	     if(i % 2 != 0)
+		   {
+	    	 
+			  a+='</tr>';
+		   }
+	}
+	   a+='</table>';
+	
+	   a+="<input type='button' onclick='shufle()' value='shuffle' id='shufle' />";
+		a+="</center>";
+	   $('#slips').html(a);
+
+}
+
+function shuffle(o){ 
+    for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+}
+
+
+function choose(id)
+{
+	if(count == 1)
+	{
+		$("#"+id).hide();
+		var a="";
+		a+='<a href="javascript:void(0)" onclick=score("'+id+'") >';
+		a+='<img src="<?php echo SITE_URL."/images/" ?>' + images[id] + '" rel="#mies1" height=50 width=50 />';
+		a+='</a>';
+		$("#u1").append(a);
+		count --;
+	}
+	
+}
+function score(id)
+{
+	$("#score").show();
+	$("#shufle").hide();
+	$("#score").addClass("scoreimage");
+	if(id == 0)
+	{
+		$("#score").html("<table><tr><td></td><td></td><td style='height:60px; width:40px;'>0</td></tr></table>");
+
+	}
+	else if(id == 3)
+	{
+		
+
+		$("#score").html("<table><tr><td></td><td></td><td style='height:60px; width:40px;'>1000</td></tr></table>");
+		$("#popmessage").html("<input type='button' value='Find Mantri' onclick=popmessage('" + id + "') />");
+		
+		
+		
+	}
+	else if(id == 2)
+	{
+		$("#score").html("<table><tr><td></td><td></td><td style='height:60px; width:40px;'>800</td></tr></table>");
+
+	}
+	else
+	{
+		$("#score").html("<table><tr><td></td><td></td><td style='height:60px; width:40px;'>500</td></tr></table>");
+
+
+	}
+	$("#score").fadeIn();
+	$("#score").fadeOut(5000);
+}
+</script>
 
 

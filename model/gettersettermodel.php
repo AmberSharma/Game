@@ -7,7 +7,7 @@ class Register extends model {
 	protected $password;
 	protected $message;
 	protected $recid;
-	protected $j =2;
+	protected $j =1;
 	
 	/**
 	 *
@@ -67,7 +67,7 @@ class Register extends model {
 		$result = $this->db->resultArray ();
 		if ($result) {
 			$_SESSION ['uid'] = $result [0] ['id'];
-			$_SESSION ['user1'] = $result [0] ['username'];
+			$_SESSION ['username'] = $result [0] ['username'];
 		}
 		return count ( $result );
 	}
@@ -77,14 +77,67 @@ class Register extends model {
 		) );
 		$this->db->From ( "user" );
 		$this->db->Where ( array (
+				"username" => $_SESSION ['username'] 
+		) );
+		$result = $this->db->Update ();
+		return $result;
+	}
+
+	public function insertMessage() {
+		
+		$this->db->Fields ( array ("user"));
+		$this->db->From ($_SESSION ['user1'][0].$_SESSION ['user2'][0].$_SESSION ['user3'][0].$_SESSION ['user4'][0]."message");
+		$this->db->Where ( array ("user" => $_SESSION ['username'] ) );
+		$this->db->Select ();
+		$result = $this->db->resultArray ();
+		$this->db->From ($_SESSION ['user1'][0].$_SESSION ['user2'][0].$_SESSION ['user3'][0].$_SESSION ['user4'][0]."message");
+		if(empty($result))
+		{
+			$this->db->Fields ( array ("user" => $_SESSION['username']  ,"message" =>$this->getMessage () , "status"=>"n") );
+			$result1 = $this->db->Insert ();
+		}
+		else
+		{
+			$this->db->Fields ( array ("message" =>$this->getMessage () , "status"=>"n") );
+			$this->db->Where ( array ("user" => $_SESSION ['username'] ) );
+			$result1 = $this->db->Update ();
+		}
+		return $result1;
+	}
+	
+
+	public function updateUser() {
+		$this->db->Fields ( array (
+				"playing" => "Y" 
+		) );
+		$this->db->From ( "user" );
+		$this->db->Where ( array (
 				"username" => $_SESSION ['user1'] 
 		) );
 		$result = $this->db->Update ();
 		return $result;
 	}
+
+	public function userScoreTable() {
+		$this->db->Fields ( array ("table_name") );
+		$this->db->From ( "information_schema.tables" );
+		$this->db->Where ( array ("table_schema" => "rvcsgame" , "table_name" =>$_SESSION ['user1'][0].$_SESSION ['user2'][0].$_SESSION ['user3'][0].$_SESSION ['user4'][0]."score" ) );
+		$this->db->Select ();
+		//$this ->db->Limit("4");
+		$result = $this->db->resultArray ();
+		if(empty($result))
+		{
+			$this->db->Create ("create table ".$_SESSION ['user1'][0].$_SESSION ['user2'][0].$_SESSION ['user3'][0].$_SESSION ['user4'][0]. "score (id int primary key auto_increment ," . $_SESSION ['user1'] . " int ," . $_SESSION ['user2'] . " int ,". $_SESSION ['user3'] . " int ," .$_SESSION ['user4'] . " int )");
+
+			$this->db->Create ("create table ".$_SESSION ['user1'][0].$_SESSION ['user2'][0].$_SESSION ['user3'][0].$_SESSION ['user4'][0]. "message (id int primary key auto_increment , user varchar(40) ,message varchar(200) ,status char )");
+		}
+		
+		}
+
+
 	public function logOut() {
 		$this->db->Fields ( array (
-				"loggedin" => "N" 
+				"loggedin" => "N" , "playing"=>"N"
 		) );
 		$this->db->From ( "user" );
 		$this->db->Where ( array (
@@ -101,21 +154,28 @@ class Register extends model {
 				"username",
 				"id" 
 		) );
-		$this->db->From ( "user where loggedin='Y' and username <> '" . $_SESSION ['user1'] . "'" );
+		$this->db->From ( "user where loggedin='Y' and playing <> 'Y'");
 		$this->db->Select ();
 		$this ->db->Limit("4");
 		$result = $this->db->resultArray ();
-		//print_r($result);die;
+		
 		for($i =0 ; $i < count($result) ; $i ++)
 		{
 			$_SESSION["user".$this->j] = $result[$i]['username'];
 			$this->j ++;
 		}
-		//print_r($_SESSION);
-		//echo $this->db->lastQuery();die;
-		//print_r($result);die;
-		// if(count($result) == 4);
+		
 		return (count($result));
+	}
+
+	public function getnewMessage() {
+		$this->db->Fields ( array ("message","user") );
+		$this->db->From ($_SESSION ['user1'][0].$_SESSION ['user2'][0].$_SESSION ['user3'][0].$_SESSION ['user4'][0]."message");
+		$this->db->Where ( array ("status" => "n" ));
+		$this->db->Select ();
+		//$this ->db->Limit("4");
+		$result = $this->db->resultArray ();
+		return ($result);
 	}
 	
 }
