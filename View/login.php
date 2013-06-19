@@ -33,13 +33,4 @@
     </fieldset>
     
 </form>
-var a1 = shuffle(randnums);
-				
-				if ($('#u'+(a1[0]+1)+a1[0]).is(":hidden"))
-				{
-					$('#u'+(a1[0]+1)+a1[0]).show();
-				}
-				if($('#u10').is(":visible"))
-				{
-					
-				}
+

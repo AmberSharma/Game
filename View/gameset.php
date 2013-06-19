@@ -1,4 +1,5 @@
 <?php
+print_r($_SESSION);
 echo "<center>";
 echo "<table id='user' border='1'>";
 	echo "<tr >";
@@ -7,10 +8,30 @@ echo "<table id='user' border='1'>";
 			echo "<center>";
 			echo "<table border='1'>";
 			echo "<tr>";
-			echo "<td id='".$_SESSION['user1']."' class='centerText'></td>";
+			
+			echo "<td id='";
+			if(isset($_SESSION['user1']))
+			{
+				echo $_SESSION['user1']; 
+			}
+			echo "' class='centerText' colspan=2></td>";
 			echo "</tr>";
 			echo "<tr>";
-			echo "<td id='u1' class='centerText'>".ucfirst($_SESSION['user1'])."</td>";
+			if(isset($_SESSION['user1']))
+			{
+				echo "<td id='u1' class='centerText  ";
+				echo $_SESSION['user1'];
+				echo " '>";
+			}
+			else
+			{
+				echo "<td id='u1' class='centerText'>";
+			}
+			if(isset($_SESSION['user1']))
+			{
+				echo ucfirst($_SESSION['user1']);
+			}
+			echo "</td>";
 			echo "</tr>";
 			echo "<tr>";
 			echo "<td id='u10' class='centerText'><img src='".SITE_URL."/images/greenarrowup.gif' height=50 width=50/></td>";
@@ -28,10 +49,29 @@ echo "<table id='user' border='1'>";
 		echo "<center>";
 		echo "<table>";
 			echo "<tr>";
-			echo "<td id='".$_SESSION['user2']."' class='centerText' colspan=2></td>";
+			echo "<td id='";
+			if(isset($_SESSION['user2']))
+			{
+				echo $_SESSION['user2']; 
+			}
+			echo "' class='centerText' colspan=2></td>";
 			echo "</tr>";
 			echo "<tr>";
-			echo "<td id='u2' class='centerText'>".ucfirst($_SESSION['user2']);
+			if(isset($_SESSION['user2']))
+			{
+				echo "<td id='u1' class='centerText  ";
+				echo $_SESSION['user2'];
+				echo " '>";
+			}
+			else
+			{
+				echo "<td id='u1' class='centerText'>";
+			}
+			if(isset($_SESSION['user2']))
+			{
+				echo ucfirst($_SESSION['user2']);
+			}
+			echo "</td>";
 			echo "<td id='u21' class='centerText'><img src='".SITE_URL."/images/greenarrowleft.gif' height=50 width=50/></td>";
 			echo "</tr>";
 			echo "</table>";
@@ -59,11 +99,30 @@ echo "<table id='user' border='1'>";
 			echo "<center>";
 			echo "<table>";
 			echo "<tr>";
-			echo "<td id='".$_SESSION['user4']."' class='centerText' colspan=2></td>";
+			echo "<td id='";
+			if(isset($_SESSION['user4']))
+			{
+				echo $_SESSION['user4']; 
+			}
+			echo "' class='centerText' colspan=2></td>";
 			echo "</tr>";
 			echo "<tr>";
 			echo "<td id='u43' class='centerText'><img src='".SITE_URL."/images/greenarrowright.gif' height=50 width=50/></td>";
-			echo "<td id='u4' class='centerText'>".ucfirst($_SESSION['user4']);
+			if(isset($_SESSION['user4']))
+			{
+				echo "<td id='u1' class='centerText  ";
+				echo $_SESSION['user4'];
+				echo " '>";
+			}
+			else
+			{
+				echo "<td id='u1' class='centerText'>";
+			}
+			if(isset($_SESSION['user4']))
+			{
+				echo ucfirst($_SESSION['user4']);
+			}
+			echo "</td>";
 			echo "</tr>";
 			echo "</table>";
 			echo "</center>";
@@ -75,13 +134,32 @@ echo "<table id='user' border='1'>";
 			echo "<center>";
 			echo "<table>";
 			echo "<tr>";
-			echo "<td id='".$_SESSION['user3']."' class='centerText'></td>";
+			echo "<td id='";
+			if(isset($_SESSION['user3']))
+			{
+				echo $_SESSION['user3']; 
+			}
+			echo "' class='centerText' colspan=2></td>";
 			echo "</tr>";
 			echo "<tr>";
 			echo "<td id='u32' class='centerText'><img src='".SITE_URL."/images/greenarrowdown.gif' height=50 width=50/></td>";
 			echo "</tr>";
 			echo "<tr>";
-			echo "<td id='u3' class='centerText'>".ucfirst($_SESSION['user3']);
+			if(isset($_SESSION['user3']))
+			{
+				echo "<td id='u1' class='centerText  ";
+				echo ucfirst($_SESSION['user3']);
+				echo " '>";
+			}
+			else
+			{
+				echo "<td id='u1' class='centerText'>";
+			}
+			if(isset($_SESSION['user3']))
+			{
+			echo $_SESSION['user3'];
+			}
+			echo "</td>";
 			echo "</tr>";
 			echo "</table>";
 			echo "</center>";

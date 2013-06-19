@@ -8,7 +8,23 @@ class Register extends model {
 	protected $message;
 	protected $recid;
 	protected $j =1;
+	protected $random1;
+	protected $random2;
 	
+	/**
+	 * @return the $random1
+	 */
+	public function getRandom1() {
+		return $this->random1;
+	}
+
+	/**
+	 * @param field_type $random1
+	 */
+	public function setRandom1($random1) {
+		$this->random1 = $random1;
+	}
+
 	/**
 	 *
 	 * @return the $username
@@ -82,6 +98,72 @@ class Register extends model {
 		$result = $this->db->Update ();
 		return $result;
 	}
+	
+	public function fetchturnRandom() {
+		$this->db->Fields ( array ("turnrandom"));
+		$this->db->From ( "randomvalue" );
+		$result = $this->db->Select ();
+		return $result[0]["turnrandom"];
+	}
+	
+	public function fetchslipRandom() {
+		$this->db->Fields ( array ("sliprandom"));
+		$this->db->From ( "randomvalue" );
+		$this->db->Select ();
+		$result = $this->db->resultArray ();
+		return $result[0]["sliprandom"];
+	}
+	
+	public function turnRandom() {
+		$this->db->Fields ( array ("id"));
+		$this->db->From ("randomvalue");
+		$this->db->Select ();
+		$result = $this->db->resultArray ();
+		$this->db->From ("randomvalue");
+		if(empty($result))
+		{
+			$this->db->Fields ( array ("turnrandom" => $this->getRandom1 ()));
+			$result1 = $this->db->Insert ();
+		}
+		else
+		{
+			$this->db->Fields ( array ("turnrandom" => $this->getRandom1 ()) );
+			$result1 = $this->db->Update ();
+		}
+	}
+	
+	public function slipRandom() {
+		$this->db->Fields ( array ("id"));
+		$this->db->From ("randomvalue");
+		$this->db->Select ();
+		$result = $this->db->resultArray ();
+		$this->db->From ("randomvalue");
+		if(empty($result))
+		{
+			$this->db->Fields ( array ("sliprandom" => $this->getRandom2 ()));
+			$result1 = $this->db->Insert ();
+		}
+		else
+		{
+			$this->db->Fields ( array ("sliprandom" => $this->getRandom2 ()) );
+			$result1 = $this->db->Update ();
+			echo $this->db->lastQuery();
+		}
+	}
+
+	/**
+	 * @return the $random2
+	 */
+	public function getRandom2() {
+		return $this->random2;
+	}
+
+	/**
+	 * @param field_type $random2
+	 */
+	public function setRandom2($random2) {
+		$this->random2 = $random2;
+	}
 
 	public function insertMessage() {
 		
@@ -112,7 +194,7 @@ class Register extends model {
 		) );
 		$this->db->From ( "user" );
 		$this->db->Where ( array (
-				"username" => $_SESSION ['user1'] 
+				"username" => $_SESSION ['username'] 
 		) );
 		$result = $this->db->Update ();
 		return $result;
@@ -159,11 +241,7 @@ class Register extends model {
 		$this ->db->Limit("4");
 		$result = $this->db->resultArray ();
 		
-		for($i =0 ; $i < count($result) ; $i ++)
-		{
-			$_SESSION["user".$this->j] = $result[$i]['username'];
-			$this->j ++;
-		}
+		
 		
 		return (count($result));
 	}
@@ -175,6 +253,21 @@ class Register extends model {
 		$this->db->Select ();
 		//$this ->db->Limit("4");
 		$result = $this->db->resultArray ();
+		return ($result);
+	}
+	
+	public function fetchPlayingUser() {
+		$this->db->Fields ( array ("username") );
+		$this->db->From ("user");
+		$this->db->Where ( array ("loggedin" => "Y" , "playing" => "Y" ));
+		$this->db->Select ();
+		$this ->db->Limit("4");
+		$result = $this->db->resultArray ();
+		for($i =0 ; $i < count($result) ; $i ++)
+		{
+			$_SESSION["user".$this->j] = $result[$i]['username'];
+				$this->j ++;
+		}
 		return ($result);
 	}
 	

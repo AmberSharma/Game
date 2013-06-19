@@ -2,92 +2,85 @@
 
 
 <style>
-
-
-
-
 .bubble {
-    background-color: #eee;
-    border: 2px solid #333;
-    border-radius: 5px;
-    color: #333;
-    display: inline-block;
-    font: 16px/24px sans-serif;
-    padding: 12px 24px;
-    position: relative;
+	background-color: #eee;
+	border: 2px solid #333;
+	border-radius: 5px;
+	color: #333;
+	display: inline-block;
+	font: 16px/24px sans-serif;
+	padding: 12px 24px;
+	position: relative;
 }
-.bubble:after,
-.bubble:before {
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-top: 20px solid #eee;
-    bottom: -20px;
-    content: '';
-    left: 50%;
-    margin-left: -20px;
-    position: absolute;
+
+.bubble:after,.bubble:before {
+	border-left: 20px solid transparent;
+	border-right: 20px solid transparent;
+	border-top: 20px solid #eee;
+	bottom: -20px;
+	content: '';
+	left: 50%;
+	margin-left: -20px;
+	position: absolute;
 }
 
 /* Styling for second triangle (border) */
-
 .bubble:before {
-    border-left: 23px solid transparent;
-    border-right: 23px solid transparent;
-    border-top: 23px solid;
-    border-top-color: inherit; /* Can't be included in the shorthand to work */
-    bottom: -23px;
-    margin-left: -23px;
+	border-left: 23px solid transparent;
+	border-right: 23px solid transparent;
+	border-top: 23px solid;
+	border-top-color: inherit;
+	/* Can't be included in the shorthand to work */
+	bottom: -23px;
+	margin-left: -23px;
 }
 
-
-
-#user
-{
-	height:600px;
-	width:600px;
+#user {
+	height: 600px;
+	width: 600px;
 }
 
 .rotateimage0 {
- -webkit-transform: rotate(-90deg);
- -moz-transform: rotate(-45deg);
- filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+	-webkit-transform: rotate(-90deg);
+	-moz-transform: rotate(-45deg);
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3 );
 }
+
 .rotateimage1 {
- -webkit-transform: rotate(-90deg);
- -moz-transform: rotate(-90deg);
- filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+	-webkit-transform: rotate(-90deg);
+	-moz-transform: rotate(-90deg);
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3 );
 }
+
 .rotateimage2 {
- -webkit-transform: rotate(-90deg);
- -moz-transform: rotate(-100deg);
- filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+	-webkit-transform: rotate(-90deg);
+	-moz-transform: rotate(-100deg);
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3 );
 }
+
 .rotateimage3 {
- -webkit-transform: rotate(-90deg);
- -moz-transform: rotate(-30deg);
- filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+	-webkit-transform: rotate(-90deg);
+	-moz-transform: rotate(-30deg);
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3 );
 }
 
-.scoreimage
-{
-background:url(../images/viewslip.png);
-background-size:80px 60px;
-background-repeat:no-repeat;
+.scoreimage {
+	background: url(../images/viewslip.png);
+	background-size: 80px 60px;
+	background-repeat: no-repeat;
 }
-
-
 </style>
 
 
 
-<a href="../controller/controller.php?method=logout" >Logout</a>
+<a href="../controller/controller.php?method=logout">Logout</a>
 <div id='score'>
-<img src='http://www.rvcs.com/images/viewslip.png' width=150 height=200 />
+	<img src='http://www.rvcs.com/images/viewslip.png' width=150 height=200 />
 </div>
 
 <div id="output"></div>
 <div id="output1">
-<pre>The chits are thrown and all 4 people have to pick one chit each.
+	<pre>The chits are thrown and all 4 people have to pick one chit each.
 Lets say the 4 people are A,B,C,D.
 All 4 pick up one chit each. They have to keep it secret that which chit they picked.
 Assume:
@@ -102,7 +95,7 @@ At this point B has to guess who between C and D is chor and who is sipahi by do
 Lets say B guesses it wrong .In this case the thief gets 500 points and assistant (mantra) will get 0 points.
 
 </pre>
-<input type="button" value="Ok Lets Play!!!" onclick="letsplay()"/>
+	<input type="button" value="Ok Lets Play!!!" onclick="letsplay()" />
 </div>
 <?php print_r($_SESSION);?>
 
@@ -111,6 +104,7 @@ Lets say B guesses it wrong .In this case the thief gets 500 points and assistan
 <script>
 var count =1;
 var myTimer;      	
+var myTimer1;      	
 var images = ['rolledpaper1.png', 'rolledpaper2.png', 'rolledpaper3.png', 'rolledpaper4.png'];
 var randnums = [0,1,2,3];
 var message3 = "Mera Mantri kaun?";
@@ -119,25 +113,31 @@ var user1 ="";
 var user2="";
 var user3="";
 var user4="";
+var username ="";
 $(document).ready(function()
 {
-user1=<?php echo "'".$_SESSION['user1']."'"; ?>;
-user2=<?php echo "'".$_SESSION['user2']."'"; ?>;
-user3=<?php echo "'".$_SESSION['user3']."'"; ?>;
-user4=<?php echo "'".$_SESSION['user4']."'"; ?>;
+
+	
 
 	$("#output1").hide();
 	$("#commentbox").hide();
 	$("#score").hide();
 	function loggedinCount()
 	{
-		
+		username = <?php echo "'".$_SESSION['username']."'"; ?>;
+		<?php if(isset($_SESSION['user1']) && isset($_SESSION['user2']) && isset($_SESSION['user3']) && isset($_SESSION['user4'])){ ?>
+		user1=<?php echo "'".$_SESSION['user1']."'"; ?>;
+		user2=<?php echo "'".$_SESSION['user2']."'"; ?>;
+		user3=<?php echo "'".$_SESSION['user3']."'"; ?>;
+		user4=<?php echo "'".$_SESSION['user4']."'"; ?>;
+		<?php }?>
 		$.ajax
 		({
 			type: "POST",
 	        	url: '../controller/controller.php?method=loggedinCount',
          		success: function(data)
          		{
+         			
              		
              		if($.trim(data) != 4)
              		{
@@ -148,6 +148,7 @@ user4=<?php echo "'".$_SESSION['user4']."'"; ?>;
          			}
              		else
              		{
+             			
              			$("#output").hide();
              			clearInterval(myTimer);
              			$("#output1").show();		
@@ -158,11 +159,97 @@ user4=<?php echo "'".$_SESSION['user4']."'"; ?>;
 	}
 	loggedinCount();
 	myTimer = setInterval(loggedinCount, 5000);
+	myTimer2 = setInterval(fetchslipRandom, 5000);
 	
 });
+function fetchplayinguser()
+{
+	var a = 0;
+	$.ajax
+	({
+		type: "POST",
+        	url: '../controller/controller.php?method=fetchPlayingUser',
+     		success: function(data)
+     		{
+     			$("#output2").html($.trim(data));
+     			$("#u10").hide();
+				$("#u21").hide();
+				$("#u32").hide();
+				$("#u43").hide();
+         		if(($.trim(data)[($.trim(data).length) -1]) == 4)
+         		{		
+     				a =1;
+					clearInterval(myTimer1);
+         		}
+			
+     		},
+		complete:function()
+		{	
+			
+			if(a == 1)
+     		{
+				var a1 = randnums;
+				$.ajax
+				({
+						type: "POST",
+			        	url: '../controller/controller.php?method=turnRandom&r1='+a1,
+			    });
+				chanceshuffle(a1);
+     		}
+			
+		}
+	});
+}
 
+function fetchturnRandom()
+{
+	$.ajax
+	({
+			type: "POST",
+        	url: '../controller/controller.php?method=fetchturnRandom',
+        	success: function(data)
+     		{
+        		chanceshuffle($.trim(data));
+     		}
+    });
+}
+
+function insertslipRandom(a1)
+{
+	$.ajax
+	({
+			type: "POST",
+        	url: '../controller/controller.php?method=insertslipRandom&r2='+a1,
+    });
+}
+
+function fetchslipRandom()
+{
+	$.ajax
+	({
+			type: "POST",
+        	url: '../controller/controller.php?method=fetchslipRandom',
+        	success: function(data)
+     		{
+        		fetchshufle($.trim(data));
+     		}
+    });
+}
+function chanceshuffle(a1)
+{
+	$("#slips").append("<input type='button' onclick='shufle()' value='shuffle' />");
+	if ($('#u'+(a1[0]+1)+a1[0]).is(":hidden"))
+	{
+		$('#u'+(a1[0]+1)+a1[0]).show();
+	}
+	if($('#u10').is(":visible"))
+	{
+		
+	}
+}
 function letsplay()
 {
+	
 	$("#output1").hide();
 	$.ajax
 		({
@@ -170,21 +257,10 @@ function letsplay()
 	        	url: '../controller/controller.php?method=gameSet',
          		success: function(data)
          		{
-             				
-				$("#output2").html($.trim(data));
-				
-				$("#u10").hide();
-				$("#u21").hide();
-				$("#u32").hide();
-				$("#u43").hide();
-				
-				
-         		},
-			complete:function()
-			{	
-$("#slips").append("<input type='button' onclick='shufle()' value='shuffle' />");
-				
-			}
+             		
+             				myTimer1 = setInterval(fetchplayinguser, 2000);
+         		}
+			
 		});
 	
 }
@@ -255,7 +331,7 @@ function shufle()
 	a+="<table>";
 	
 	var index = shuffle(randnums);
-	   
+	insertslipRandom(index);
 	for(var i=0;i<4;i++)
 	{
 		 if(i % 2 == 0)
@@ -281,6 +357,49 @@ function shufle()
 		a+="</center>";
 	   $('#slips').html(a);
 
+	   
+
+}
+
+function fetchshufle(id)
+{
+	
+	var a="";
+	
+	$('#slips').html("");
+	a+= "<center>";
+	a+="<table>";
+	
+	var index = id;
+	
+	for(var i=0;i<4;i++)
+	{
+		 if(i % 2 == 0)
+		   {
+			   
+			 a+=  '<tr>';
+		   }
+		 
+	    a+='<td class ="rotateimage'+index[i]+'"> ';
+	    a+='<a id="'+index[i]+'" onclick=choose("'+index[i]+'") href="javascript:void(0)">';
+		a+=index[i];
+	     a+='<img src="<?php echo SITE_URL."/images/" ?>' + images[index[i]] + '" height=50 width=50/>';
+		a+='</a>';
+	     a+='</td>';
+	     if(i % 2 != 0)
+		   {
+	    	 
+			  a+='</tr>';
+		   }
+	}
+	   a+='</table>';
+	
+	   a+="<input type='button' onclick='shufle()' value='shuffle' id='shufle' />";
+		a+="</center>";
+	   $('#slips').html(a);
+
+	   
+
 }
 
 function shuffle(o){ 
@@ -298,7 +417,7 @@ function choose(id)
 		a+='<a href="javascript:void(0)" onclick=score("'+id+'") >';
 		a+='<img src="<?php echo SITE_URL."/images/" ?>' + images[id] + '" rel="#mies1" height=50 width=50 />';
 		a+='</a>';
-		$("#u1").append(a);
+		$("."+username).append(a);
 		count --;
 	}
 	

@@ -61,7 +61,6 @@ class MyClass
 		require_once SITE_PATH.'/../model/gettersettermodel.php';
 		$objInitiateUser = new Register ();
 		$b=$objInitiateUser->loggedinCount () ;
-		$b = $b;
 		print_r($b);
 		
 	}
@@ -80,6 +79,58 @@ class MyClass
 		$objInitiateUser->setMessage($_REQUEST['message']);
 		$b=$objInitiateUser->insertMessage () ;
 		print_r($b);
+	}
+	
+	public function fetchPlayingUser ()
+	{
+		require_once SITE_PATH.'/../model/gettersettermodel.php';
+		$objInitiateUser = new Register ();
+		$b=$objInitiateUser->fetchPlayingUser () ;
+		
+		if(count($b) == 4)
+		$objInitiateUser->userScoreTable () ;
+		require_once SITE_PATH.'/../View/gameset.php';
+		echo count($b);
+		
+		
+	}
+	
+	public function turnRandom ()
+	{
+		require_once SITE_PATH.'/../model/gettersettermodel.php';
+		$objInitiateUser = new Register ();
+		$objInitiateUser->setRandom1($_REQUEST['r1']);
+		$objInitiateUser->turnRandom () ;
+		
+	}
+	
+	public function insertslipRandom ()
+	{
+		require_once SITE_PATH.'/../model/gettersettermodel.php';
+		$objInitiateUser = new Register ();
+		$objInitiateUser->setRandom2($_REQUEST['r2']);
+		$objInitiateUser->slipRandom();
+		$objInitiateUser->turnRandom () ;
+	
+	}
+	
+	public function fetchturnRandom ()
+	{
+		require_once SITE_PATH.'/../model/gettersettermodel.php';
+		$objInitiateUser = new Register ();
+		$b = $objInitiateUser->fetchturnRandom () ;
+	
+	}
+	
+	public function fetchslipRandom ()
+	{
+		require_once SITE_PATH.'/../model/gettersettermodel.php';
+		$objInitiateUser = new Register ();
+		$b = $objInitiateUser->fetchslipRandom () ;
+		$b =str_replace(',', '', $b);
+		die($b);
+		
+	
 	}
 
 	public function getMessage ()
@@ -103,8 +154,8 @@ class MyClass
 		require_once SITE_PATH.'/../model/gettersettermodel.php';
 		$objInitiateUser = new Register ();
 		$b=$objInitiateUser->updateUser () ;
-		$objInitiateUser->userScoreTable () ;
-		require_once SITE_PATH.'/../View/gameset.php';
+		print_r($b);die;
+		
 	}
 	public function logout ()
 	{	
