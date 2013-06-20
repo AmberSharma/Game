@@ -89,8 +89,7 @@ class MyClass
 		
 		if(count($b) == 4)
 		$objInitiateUser->userScoreTable () ;
-		require_once SITE_PATH.'/../View/gameset.php';
-		echo count($b);
+		require_once SITE_PATH.'/../View/try.php';
 		
 		
 	}

@@ -3,7 +3,7 @@
 
 <style>
 .bubble {
-	background-color: #eee;
+	background-color: #FFAB00;
 	border: 2px solid #333;
 	border-radius: 5px;
 	color: #333;
@@ -16,7 +16,7 @@
 .bubble:after,.bubble:before {
 	border-left: 20px solid transparent;
 	border-right: 20px solid transparent;
-	border-top: 20px solid #eee;
+	border-top: 20px solid #FFAB00;
 	bottom: -20px;
 	content: '';
 	left: 50%;
@@ -69,38 +69,49 @@
 	background-size: 80px 60px;
 	background-repeat: no-repeat;
 }
+
+body
+{
+	background-image:url(<?php echo SITE_URL .'/images/backgroundimage.jpg' ?>);
+	background-repeat:no-repeat;
+	background-size:1376px 680px;
+}
+#logged
+{
+	margin-top:120px; 
+	margin-left:900px;
+}
+.prestyle
+{
+	background-image:url(<?php echo SITE_URL .'/images/background.png' ?>);
+	background-repeat:no-repeat;
+	background-size:668px 475px;
+	border: 1px solid red;
+	margin-left:345px;
+	margin-top:-20px;
+	width:670px;
+	height:475px;
+}
 </style>
 
-
-
-<a href="../controller/controller.php?method=logout">Logout</a>
+<body>
+<div id='logged'>
+<a href="../controller/controller.php?method=logout"  ><img src=<?php echo SITE_URL . '/images/logout.png' ?> height='80' width='80'/></a>
+</div>
 <div id='score'>
 	<img src='http://www.rvcs.com/images/viewslip.png' width=150 height=200 />
 </div>
-
-<div id="output"></div>
-<div id="output1">
-	<pre>The chits are thrown and all 4 people have to pick one chit each.
-Lets say the 4 people are A,B,C,D.
-All 4 pick up one chit each. They have to keep it secret that which chit they picked.
-Assume:
-A picks Raja
-B picks Mantri
-C picks Sipahi
-D picks chor
-A says mera mantra kaun? 
-B says Mein sarkar 
-A says chor sipahi ka pata lagao 
-At this point B has to guess who between C and D is chor and who is sipahi by doing some sort of face reading but mainly its all guess and luck work.
-Lets say B guesses it wrong .In this case the thief gets 500 points and assistant (mantra) will get 0 points.
-
-</pre>
-	<input type="button" value="Ok Lets Play!!!" onclick="letsplay()" />
+<pre class="prestyle">
+<div id="output" style='border : 1px solid green; margin-top:60px;margin-left:50px; width:550px;font-size:18px;'></div>
+<div id="output1" style="border: 1px solid green;margin-top:200px;margin-left:50px;width:550px;height:115px;">
+<center>
+<a href="javascript:void(0)" onclick="letsplay()"><img src="../images/start.png" height='150' width='150'/></a>
+</center>
 </div>
 <?php print_r($_SESSION);?>
-
 <div id="output2"></div>
-
+</pre>
+</body>
 <script>
 var count =1;
 var myTimer;      	
@@ -176,7 +187,7 @@ function fetchplayinguser()
 				$("#u21").hide();
 				$("#u32").hide();
 				$("#u43").hide();
-         		if(($.trim(data)[($.trim(data).length) -1]) == 4)
+         		if(($.trim(data)[($.trim(data).length) -6]) == 4)
          		{		
      				a =1;
 					clearInterval(myTimer1);
@@ -258,12 +269,14 @@ function letsplay()
          		success: function(data)
          		{
              		
+					$("pre").removeClass('prestyle');
              				myTimer1 = setInterval(fetchplayinguser, 2000);
          		}
 			
 		});
 	
 }
+
 function popmessage(id)
 {
 	var mess="";
@@ -339,12 +352,15 @@ function shufle()
 			   
 			 a+=  '<tr>';
 		   }
+		if(index[i] != "-1")
+		{
 	    a+='<td class ="rotateimage'+index[i]+'"> ';
-	    a+='<a id="'+index[i]+'" onclick=choose("'+index[i]+'") href="javascript:void(0)">';
+	    a+='<a id="'+index[i]+'" onclick=choose("'+index[i]+'","'+index+'") href="javascript:void(0)">';
 		a+=index[i];
 	     a+='<img src="<?php echo SITE_URL."/images/" ?>' + images[index[i]] + '" height=50 width=50/>';
 		a+='</a>';
 	     a+='</td>';
+}
 	     if(i % 2 != 0)
 		   {
 	    	 
@@ -379,13 +395,18 @@ function fetchshufle(id)
 			   
 			 a+=  '<tr>';
 		   }
-		 
-	    a+='<td class ="rotateimage'+index[i]+'"> ';
-	    a+='<a id="'+index[i]+'" onclick=choose("'+index[i]+'") href="javascript:void(0)">';
+		
+		 if(index[i] != "-1")
+		{
+		
+	    		a+='<td class ="rotateimage'+index[i]+'"> ';
+	    		a+='<a id="'+index[i]+'" onclick=choose("'+index[i]+'","'+id+'") href="javascript:void(0)">';
 		a+=index[i];
 	     a+='<img src="<?php echo SITE_URL."/images/" ?>' + images[index[i]] + '" height=50 width=50/>';
 		a+='</a>';
+
 	     a+='</td>';
+		}
 	     if(i % 2 != 0)
 		   {
 	    	 
@@ -408,16 +429,19 @@ function shuffle(o){
 }
 
 
-function choose(id)
+function choose(id , rand)
 {
 	if(count == 1)
 	{
 		$("#"+id).hide();
+		var a1 = rand.replace(""+id, "-1");
 		var a="";
 		a+='<a href="javascript:void(0)" onclick=score("'+id+'") >';
 		a+='<img src="<?php echo SITE_URL."/images/" ?>' + images[id] + '" rel="#mies1" height=50 width=50 />';
 		a+='</a>';
 		$("."+username).append(a);
+		insertslipRandom(a1);
+		myTimer = setInterval(getmessage, 5000);
 		count --;
 	}
 	
@@ -445,7 +469,7 @@ function score(id)
 	else if(id == 2)
 	{
 		$("#score").html("<table><tr><td></td><td></td><td style='height:60px; width:40px;'>800</td></tr></table>");
-
+		$("#popmessage").html("<input type='button' value='Respond to king' onclick=popmessage('" + id + "') />");
 	}
 	else
 	{
