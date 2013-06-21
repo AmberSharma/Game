@@ -170,7 +170,6 @@ $(document).ready(function()
 	}
 	loggedinCount();
 	myTimer = setInterval(loggedinCount, 5000);
-	myTimer2 = setInterval(fetchslipRandom, 5000);
 	
 });
 function fetchplayinguser()
@@ -187,6 +186,7 @@ function fetchplayinguser()
 				$("#u21").hide();
 				$("#u32").hide();
 				$("#u43").hide();
+				
          		if(($.trim(data)[($.trim(data).length) -6]) == 4)
          		{		
      				a =1;
@@ -248,14 +248,19 @@ function fetchslipRandom()
 }
 function chanceshuffle(a1)
 {
-	$("#slips").append("<input type='button' onclick='shufle()' value='shuffle' />");
+	
+	var className = $('#u'+(a1[0]+1)).attr('class');
+	
 	if ($('#u'+(a1[0]+1)+a1[0]).is(":hidden"))
 	{
 		$('#u'+(a1[0]+1)+a1[0]).show();
 	}
-	if($('#u10').is(":visible"))
+	if($('#u'+(a1[0]+1)+a1[0]).is(":visible"))
 	{
-		
+		if(className == username)
+		{
+			$("#slips").append("<center><input type='button' onclick='shufle()' value='shuffle' /></center>");
+		}
 	}
 }
 function letsplay()
@@ -355,7 +360,7 @@ function shufle()
 		if(index[i] != "-1")
 		{
 	    a+='<td class ="rotateimage'+index[i]+'"> ';
-	    a+='<a id="'+index[i]+'" onclick=choose("'+index[i]+'","'+index+'") href="javascript:void(0)">';
+	    a+='<a id="'+index[i]+'" onclick=choose("'+index[i]+'+'+index+'") href="javascript:void(0)">';
 		a+=index[i];
 	     a+='<img src="<?php echo SITE_URL."/images/" ?>' + images[index[i]] + '" height=50 width=50/>';
 		a+='</a>';
@@ -369,9 +374,10 @@ function shufle()
 	}
 	   a+='</table>';
 	
-	   a+="<input type='button' onclick='shufle()' value='shuffle' id='shufle' />";
+	   
 		a+="</center>";
-	   $('#slips').html(a);
+		$('#slips').html(a);
+		myTimer2 = setInterval(fetchslipRandom, 5000);
 
 	   
 
@@ -379,7 +385,6 @@ function shufle()
 
 function fetchshufle(id)
 {
-	
 	var a="";
 	
 	$('#slips').html("");
@@ -415,9 +420,10 @@ function fetchshufle(id)
 	}
 	   a+='</table>';
 	
-	   a+="<input type='button' onclick='shufle()' value='shuffle' id='shufle' />";
+	   
 		a+="</center>";
-	   $('#slips').html(a);
+		$('#slips').html(a);
+		chanceshuffle(id);
 
 	   
 

@@ -223,7 +223,7 @@ class Register extends model {
 		) );
 		$this->db->From ( "user" );
 		$this->db->Where ( array (
-				"username" => $_SESSION ['user1'] 
+				"username" => $_SESSION ['username'] 
 		) );
 		$result = $this->db->Update ();
 		if ($result == "1") {
